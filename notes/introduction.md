@@ -74,15 +74,86 @@ The Terminal should give the following messages:
 INFO:     Started server process [594393]
 INFO:     Waiting for application startup.
 INFO:     Application startup complete.
-INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     Uvicorn running on http:#0.0.0.0:8000 (Press CTRL+C to quit)
 
-In the browser, enter the address: http://localhost:8000
+In the browser, enter the address: http:#localhost:8000
 
 The browser sends a request to the API, and hello: "world" should display on the screen.
 
 - Now, got to localhost:8000/docs Or localhost:8000/redoc
   - Documentation for the API will be automatically generated.
   - docs and redoc are two different versions.
+
+
+## Pydantic Models
+
+We want the API to be able to:
+- Create tasks
+- Delete tasks 
+- Update tasks
+
+- Create an empty list for tasks.
+
+
+```
+main.py
+
+from fastapi import FastAPI
+from pydantic import BaseModel
+from typing import List, Optional
+from uuid import UUID, uuid4
+
+app = FastAPI()
+
+# Create class Task that inherits from BaseModel
+class Task(BaseModel):
+  # Create fields with types.
+  # UUID = A unique identifier.
+  id: Optional[UUID] = None
+  title: str
+  description: Optional[str] = None
+  completed: bool = False
+
+# Empty list for tasks
+# This would be a real database for a working API.
+tasts = []
+
+# Any data that is given to the API that is valid will be wrapped in the Task object, and given a unique ID, and appended to the list.
+
+# URL we go to to create tasks.
+# Tell FastAPI that we want to use the Task Pydantic model to encode the JSON that will be returned from this root.
+@app.post("/tasks/", response_model=Task)
+def create_task(task: Task):
+  # Create new unique identifier.
+  task.id = uuid4()
+  tasks.append(task)
+  return task
+
+@app.get("/tasks/", response_model=List[Task])
+# Change from read to read_tasks
+# Pass the List of Tasks as the response_model arg.
+# The return value of tasks is a List.
+def read_tasks():
+  return tasks
+
+if __name__ == "__main__":
+  import uvicorn
+
+  uvicorn.run(app, host="0.0.0.0", port=8000)
+```
+
+Run:
+python3 main.py
+
+- Now when we go to localhost:8000/docs we see that under default, there are  both Get and Post fields we can click into.
+
+- Click into Post -> Try it out -> and: delete the id number, add a title of "hello, world," and a description of "testing."
+
+- Click Execute: The server response code should be 200, a new unique id should have been added, as well as the "hello, world," and "testing" entries.
+
+- Try sending a Post with an empty response. We should get response 422: Unprocessable Entity.
+
+
 
 
 
