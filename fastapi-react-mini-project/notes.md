@@ -87,6 +87,9 @@ CORS errors happen when:
 ### FastAPI CORSMiddleware
 Suppose that the frontend is running on localhost:3000, and the backend API is running on localhost:8000. Without CORS configuration, the browser sees these as different origins and blocks the requests for security reasons. CORSMiddleware allows us to configure and allow this behavior.
 
+
+## Writing main.py
+
 ```
 # Uvicorn: server
 import uvicorn
@@ -148,20 +151,25 @@ def add_fruit(fruit: Fruit):
 
 if __name__=="__main__":
   uvicorn.run(app, host="0.0.0.0", port=8000)
-  
-
-
-
-
-
-
-
-
-
-  
-
-
 ```
+
+
+## Create the Frontend
+
+Go to the project root.
+
+Run:
+npm create vite@latest frontend --template react
+- select React
+- select JavaScript
+
+cd into frontend
+
+Run:
+npm install
+npm install axios
+
+
 
 
 
