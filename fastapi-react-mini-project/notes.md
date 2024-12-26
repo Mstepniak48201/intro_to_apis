@@ -169,6 +169,71 @@ Run:
 npm install
 npm install axios
 
+There may be some conflicts between node version. If needed, update node:
+```
+Run:
+
+# Check node version
+node -v
+
+# Install most reacent long term support version
+nvm install --lts
+```
+
+Navigate to src -> Make a new directory named "components."
+
+In src -> make a new file named api.js
+
+```
+api.js
+
+// Axios definition for calling the api
+import acios from 'axios';
+
+// Create an oinstance of axios with the base URL
+// If we ever want to point the frontend to a different backend, we only need to change the URL here.
+const api: AxiosInstance = axios.create({
+  baseURL: "http://localhost:8000"
+});
+
+// Export the Axios instance.
+export default api;
+```
+
+Navigate to src/components -> make new file named AddFruitForm.jsx
+
+```
+import React, {useState} from "react";
+
+const AddFruitForm = ({addFruit}) => {
+  const [fruitName, setFruitName] = useState("")
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (fruitName) {
+      addFruit(fruitname);
+      setFruitName("");
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input
+        type=""text
+        value={fruitName}
+        onChange{(e) => setFruitName(e.target.valiue)}
+        placeholder="Enter fruit name"
+      />
+      <button type="submit">Add Fruit</button>
+    </form>
+  );
+};
+
+export default AddFruitForm;
+```
+
+
+
 
 
 
