@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import AddFruitForm from "./AddFruitForm";
-import api from "../api";
+import api from "../api.js";
 
 // Declare functional component FruitList
 const FruitList = () => {
