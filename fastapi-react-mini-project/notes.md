@@ -188,7 +188,7 @@ In src -> make a new file named api.js
 api.js
 
 // Axios definition for calling the api
-import acios from 'axios';
+import axios from 'axios';
 
 // Create an oinstance of axios with the base URL
 // If we ever want to point the frontend to a different backend, we only need to change the URL here.
@@ -205,9 +205,24 @@ Navigate to src/components -> make new file named AddFruitForm.jsx
 ```
 import React, {useState} from "react";
 
+// Create functional component AddFruitForm that takes the function addFruit() as a prop.
 const AddFruitForm = ({addFruit}) => {
+  
+  // Declare State.
+  // In this state hook, fruitName is the current state. It holds the value the user types into the input field.
+  // setFruitName is the function used to update the fruitName state. 
+  // useState("") initializes the state to an empty string. 
+
+  // Declare state: fruitName holds the value of the current state.
+  // setFruitName is the function that updates the fruitName state with the value inputted by the user.
+  // useState("") initializes the state to an empty string.
   const [fruitName, setFruitName] = useState("")
 
+  // handleSubmit will be called when the form is submitted in the onSubmit event in <form>.
+  // event.preventDefault() prevents the default behavior, in this case reloading the page.
+  // if (fruitName)  checks if the user has entered a value.
+  // addFruit() is the function that will be passed as a prop. fruitname is passed to it.
+  // setFruitName clears the input field by resetting state to an empty string.
   const handleSubmit = (event) => {
     event.preventDefault();
     if (fruitName) {
@@ -217,11 +232,17 @@ const AddFruitForm = ({addFruit}) => {
   };
 
   return (
+    // <form> listens for the onSubmit event.
     <form onSubmit={handleSubmit}>
+      // value is set equal to the state value fruitName.
+      // When the user types into the input field, the onChange event is triggered.
+      // The event handler arrow function that OnChange is set equal to recieves the event object (e)
+      // e.target.value accesses and captures the current text entered into the input field.
+      // The state updater setFruitName stores the new value in the state variable fruitName
       <input
-        type=""text
-        value={fruitName}
-        onChange{(e) => setFruitName(e.target.valiue)}
+        type ="text"
+        value ={fruitName}
+        onChange = {(e) => setFruitName(e.target.value)}
         placeholder="Enter fruit name"
       />
       <button type="submit">Add Fruit</button>
@@ -232,7 +253,88 @@ const AddFruitForm = ({addFruit}) => {
 export default AddFruitForm;
 ```
 
+Make a new file named Fruits.jsx
 
+* Flow:
+1. Mount (first render):
+  - useEffect triggers -> fetchFruits is called -> setFruits (useState()) is called, setting fruits to
+  the current list of fruits from the server (empty right now)
+
+2. User enters a new fruit into AddFruitForm:
+  - addFruit is called, and addFruit sends POST request to the server with the new fruit's name.
+  - After the server updates, fetchFruits is called, fetching the updated list to keep the UI in sync.
+
+3. Axios POST request explaination:
+  - When addFruit is called, fruitName is passed as a prop. 
+  - The actual POST request is made by a method from the axios library.
+  - We have our instance of axios, named "api" imported at the top.
+  - api.post() takes two args: a path and a payload (key-value pair), in this case, api.post("/fruits", name: fruitName)
+
+4. Re-Rendering:
+  - Each time the fruits state is updated, the component re-renders with the new data.
+
+* Summary:
+On mount, fetchFruits is called from within useEffect(), which is called as a best practice to syncronize the data. The useEffect() call has a dependency array [] at the end, and this signals to the browser that this is the only time that THIS useEffect() will be called. From there on, fetchFruits will be called from within addFruit, which will be called when new data is entered into the AddFruitForm.
+
+```
+import React, {useEffect, useState} from "react";
+import AddFruitForm from "./AddFruitForm";
+import api from "../api";
+
+// Declare functional component FruitList
+const FruitList = () => {
+  // useState() initilaizes fruits as an empty array.
+  const [fruits, setFruits] = useState([]);
+
+  // async keyword signals that the function contains asynchronous code an await statements. 
+  const fetchFruits = async () => {
+    try {
+      // await: pauses the code until promise is resolved.
+      // wait for the API request to finish and store the result in the response variable.
+      const response = await api.get("/fruits");
+      setFruits(response.data.fruits);
+    } catch (error) {
+      console.error("Error fetching fruits", error);
+    }
+  };
+
+  const addFruit = async (fruitName) => {
+    try {
+      // Send post request with new fruit's name, sending the fruit's name to the backend.
+      // After the request, the server sends a response confirming the addition.
+      await api.post("/fruits", {name: fruitName});
+      // Refresh the list after adding a fruit.
+      // Every time fetchFruits is called, it overwrites the fruits state with a full, updated list from the server.
+      fetchFruits();
+    } catch (error) {
+      console.error("Error adding fruit", error);
+    }
+  };
+
+  // When the FruitList component is displayed on the page for the first time, fetchFruits is called.
+  // This ensures that the initial list of fruits is fetched from the backend and displayed in the component.
+  // The empty array is the dependency array: this ensures that the useEffect will run once when the component initially mounts.
+  // Running useEffect on mount is good practice: it ensures that the component synchronizes with the
+  // latest data from the server.
+  useEffect(() => {
+    fetchFruits();
+  }, []);
+
+  return (
+    <div>
+      <h2>Fruits List</h2>
+      <ul>
+        {fruits.map((fruit, index) => (
+          <li key={index}>{fruit.name}</li>
+        ))}
+      </ul>
+      <AddFruitform addFruit={addFruit} />
+    </div>
+  );
+};
+
+export default FruitList;
+```
 
 
 
