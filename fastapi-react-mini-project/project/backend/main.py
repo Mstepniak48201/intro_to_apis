@@ -14,7 +14,7 @@ class Fruits(BaseModel):
 app = FastAPI()
 
 # Create list of origins that are allowed to access the API (in this case, the React app running locally).
-origins = ["http://localhost:3000"]
+origins = ["http://localhost:5173"]
 
 # Enable and configure CORSMiddleware
 # If we wanted to block a method, such as Put or Delete, this would be the place.

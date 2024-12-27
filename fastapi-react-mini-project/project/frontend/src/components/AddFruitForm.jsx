@@ -21,19 +21,19 @@ const AddFruitForm = ({addFruit}) => {
   const handleSubmit = (event) => {
     event.preventDefault();
     if (fruitName) {
-      addFruit(fruitname);
+      addFruit(fruitName);
       setFruitName("");
     }
   };
 
   return (
     // <form> listens for the onSubmit event.
-    <form onSubmit={handleSubmit}>
     // value is set equal to the state value fruitName.
     // When the user types into the input field, the onChange event is triggered.
     // The event handler arrow function that OnChange is set equal to recieves the event object (e)
     // e.target.value accesses and captures the current text entered into the input field.
     // The state updater setFruitName stores the new value in the state variable fruitName
+    <form onSubmit={handleSubmit}>
       <input
         type ="text"
         value ={fruitName}
