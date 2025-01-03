@@ -138,10 +138,26 @@ class BlogPostListCreate(generics.ListCreateAPIView):
 
   # Specify which serializer we want to use.
   serializer_class = BlogPostSerializer 
+```
+
+Once this view is connected to a url, the generics.ListCreateAPIView generic will allow us to get all existing blog posts and create new posts.o
 
 
+## Specify a URL or route
+
+Within the api directory, make a new file named urls.py.
+
+The routing system is two steps:
+
+1. Within mysite/mysite, there is another file named urls.py. In mysite/urls.py, is the following pattern:
 
 ```
+urlpatterns = [
+    path('admin/', admin.site.urls),
+]
+```
+
+
 
 
 
