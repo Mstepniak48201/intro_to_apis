@@ -165,22 +165,30 @@ class BlogPostListCreate(generics.ListCreateAPIView):
   serializer_class = BlogPostSerializer 
 ```
 
-Once this view is connected to a url, the generics.ListCreateAPIView generic will allow us to get all existing blog posts and create new posts.o
+Once this view is connected to a URL, the generics.ListCreateAPIView generic will allow us to get all existing blog posts and create new posts.o
 
 
 ## Specify a URL or route
 
-Within the api directory, make a new file named urls.py.
+Working directory: api/mysite/api
 
-The routing system is two steps:
+Make a new file named urls.py.
 
-Within mysite/mysite, there is another file named urls.py. In mysite/urls.py, is the following boilerplate pattern:
+
+### Two-step routing system:
+
+Within mysite/mysite, there is another file named urls.py. In mysite/mysite/urls.py, is the following boilerplate pattern:
 
 ```
 urlpatterns = [
     path('admin/', admin.site.urls),
 ]
 ```
+
+Within this file is the ability to forward URLs to different apps. Django will always look here first, and look for a specific pattern. In this case the pattern is "admin/". Any remainder in the URL after "admin/" will be forwarded to a different app, in this case admin.site.urls.
+
+
+### Explanation of urlpatterns
 
 urlpatterns is a list of route patterns that Django uses to determine the handling of incoming HTTP requests:
 
@@ -198,18 +206,56 @@ In the boilerplate code:
     1. Route: 'admin/'
     2. View: admin.site.urls
 
+
+### Forwarding to the api app
+
+Working directory/file: mysite/mysite/urls.py
+
+We want to take ANY URL, and forward it to the api app.
+ 
 We are going to remove the import line `from django.contrib import admin` up top, and change the boilerplate function to:
 
 ```
 urlpatterns = [
+
+    # Change the path to an empty path.
+    # Use the include() function
     path("", include("api.urls")),
 ]
 ```
 
 
+### Explanation of include() as used in path()
 
+- The empty string "" as the first argument to path(): matches the root URL of the project. Any request to the base URL ("http://mydomain.com/") will match this pattern.
 
+- include("api.urls") tells Django to look for the URL
 
+include("api.urls") tells Django to look for the URL patterns defined in api/urls.py. This means any request to the root URL (in this case, http://yourdomain.com/) will be handled by the URL patterns inside api/urls.py.
+
+Project structure:
+
+api
+- mysite
+    - api
+        - migrations
+        - __init__.py
+        - admin.py
+        - apps.py
+        - models.py
+        - serializers.py
+        - tests.py
+        - urls.py
+        -views.py
+    - mysite
+        - __init__.py
+        - asgi.py
+        - settings.py
+        - urls.py
+        - wsgi.py
+    - manage.py
+- requirements.txt
+- .venv
 
 
 
