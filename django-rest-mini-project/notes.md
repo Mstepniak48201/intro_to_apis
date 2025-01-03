@@ -26,7 +26,7 @@ python3 -m venv .venv
     deactivate
 
 - Install dependencies: Run:
-pip3 install -r requirements.text
+pip3 install -r requirements.txt
 
 - Create new Django project: Run:
 django-admin startproject mysite
@@ -36,30 +36,40 @@ python3 -m django startproject mysite
 
 // This should create a new directory called "mysite."
 // This is where we will write the API.
-cd mysite
+// The current directory structure should look like this:
+api
+- mysite
+    - mysite
+    - manage.py
+- requirements.txt
+- .venv
+
+cd mysite 
 
 - Create app: Run:
 // Notice within the mysite directory, there is a file manage.py. This will help us create the app.
-// The command startapp in manage.py takes a name arg. We will name the ap "api."
+// The command startapp in manage.py takes a name arg. We will name the app "api."
 python3 manage.py startapp api
 
 // A new directory called api should be created within mysite.
 // Project structure should look like this:
 
 ```
-project_root_directory
+api
   - mysite
     - api
     - mysite
     - manage.py
-    - requirements.txt
+- requirements.txt
+- .venv
 ```
 
 
 ## Connecting the app with the Django project
 
-// cd into the app directory
-cd mysite/mysite
+cd mysite
+
+Current working directory: api/mysite/mysite
 
 open settings.py -> scroll to INSTALLED APPS = []
   - Add our app to the list of installed apps.
@@ -71,6 +81,8 @@ open settings.py -> scroll to INSTALLED APPS = []
 ## Building the model that our data will interact with
 
 cd api
+
+current working directory: api/mysite/api
 
 open models.py
 
