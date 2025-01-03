@@ -118,7 +118,7 @@ This will use the Meta class, which is common to Django and Django Rest Framewor
 
 - The Meta class is where we specify additional configuration for the parent class
 
-From within the api directory:
+Current working directory: api/mysite/api
 
 vim serializers.py
 
@@ -146,7 +146,9 @@ We are going to import generics from `rest_framework`, which will give us the "g
 
 Create a view that utilizes the model and the serializer.
 
-From the api directory, go to views.py
+Current working directory: api/mysite/api
+
+Open views.py
 
 ```
 from django.shortcuts import render
