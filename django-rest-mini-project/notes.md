@@ -2,7 +2,9 @@
 
 ## Setup
 
-- Make project directory
+- mkdir api
+
+- cd api
 
 - Make requirements.txt
 
@@ -13,6 +15,15 @@ django
 djangorestframework
 environs
 ```
+
+- Set up Python Virtual Enviroment: Run:
+python3 -m venv .venv
+
+    - To activate: Run:
+    source .venv/bin/activate
+
+    - To deactivate: Run:
+    deactivate
 
 - Install dependencies: Run:
 pip3 install -r requirements.text
@@ -149,13 +160,45 @@ Within the api directory, make a new file named urls.py.
 
 The routing system is two steps:
 
-1. Within mysite/mysite, there is another file named urls.py. In mysite/urls.py, is the following pattern:
+Within mysite/mysite, there is another file named urls.py. In mysite/urls.py, is the following boilerplate pattern:
 
 ```
 urlpatterns = [
     path('admin/', admin.site.urls),
 ]
 ```
+
+urlpatterns is a list of route patterns that Django uses to determine the handling of incoming HTTP requests:
+
+- When a request comes in, Django compares the URL path of the request and matches it against the patterns defined in urlpatterns.
+- If it is found, Django uses the associated view to process the request and return the response.
+- If not found, Django raises a 404 Not Found error.
+
+In this case, the item in the list is a path() function, but it could also be a `re_path()` or url() function.
+- path() defines:
+    1. Route: a URL pattern to match
+    2. View: the function or class that will handle the request
+    3. Name (optional): a name for the route, used for reverse URL lookups.
+
+In the boilerplate code:
+    1. Route: 'admin/'
+    2. View: admin.site.urls
+
+We are going to remove the import line `from django.contrib import admin` up top, and change the boilerplate function to:
+
+```
+urlpatterns = [
+    path("", include("api.urls")),
+]
+```
+
+
+
+
+
+
+
+
 
 
 
