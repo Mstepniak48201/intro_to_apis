@@ -17,5 +17,7 @@ Including another URLconf
 from django.urls import path, include
 
 urlpatterns = [
+    # Change the path to an empty path, so that path() matches any request to the root url.
+    # Use the include() function to point the url to urls.py within the api directory.
     path("", include("api.urls")),
 ]

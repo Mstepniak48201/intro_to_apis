@@ -1,4 +1,6 @@
-# Django REST API mini project
+#Django REST API mini project
+
+
 
 ## Setup
 
@@ -65,6 +67,24 @@ api
 ```
 
 
+## Overview of Django Request-Response Workflow
+
+Before beginning, here is a step-by-step, high-level description of the flow of a request through Django API.
+
+1. The client sends an HTTP request. The request reaches urls.py in the main project directory (in this case mysite/mysite/urls.py), where Django's URL dispatcher looks for a match.
+
+2. mysite/mysite/urls.py forwards the request to the app-specific routing in api/urls.py, where it matches with a corresponding view. api/urls.py sends the request to the appropriate view in views.py.
+
+3. The view handles the request logic. If the request requires database interaction, the view calls the ORM.
+
+4. The ORM (defined in models.py) translates the Python-based model queries into SQL commands to interact with the database. When the database responds, the ORM converts the results into Python objects (model instances).o
+
+5. Data returned by the ORM is passed to the serializer, which converts the Python objects (model instances) into a client friendly format, in this case JSON.
+
+6. The view packages the serialized data into an HTTP response. The response is sent back to the client for use in the application.
+
+
+
 ## Connecting the app with the Django project
 
 cd mysite
@@ -76,6 +96,7 @@ open settings.py -> scroll to INSTALLED APPS = []
   - The app should be called "api" so we just add "api" to the list.
   - Additionally, we will add the Django REST framework to the installed apps list.
     - Add `"rest_framework"` to the list.
+
 
 
 ## Building the model that our data will interact with
@@ -110,7 +131,7 @@ class BlogPost(models.Model):
 
 ## Defining the Serializer
 
-For now, we will be treating the Serializer as a black box that converts our data model into JSON. Further study will focus on customizing and extending it. Here, it will take the model that we just defined, and convert it into JSON compatiable data that the API can interact with.
+For now, we will treat the Serializer as a black box that converts our data model into JSON. Further study will focus on customizing and extending it. Here, it will take the model that we just defined, and convert it into JSON compatiable data that the API can interact with.
 
 This will use the Meta class, which is common to Django and Django Rest Framework. It is used to define metadata for a parent class.
 
@@ -166,6 +187,7 @@ class BlogPostListCreate(generics.ListCreateAPIView):
 ```
 
 Once this view is connected to a URL, the generics.ListCreateAPIView generic will allow us to get all existing blog posts and create new posts.o
+
 
 
 ## Specify a URL or route
@@ -233,7 +255,7 @@ urlpatterns = [
 
 include("api.urls") tells Django to look for the URL patterns defined in api/urls.py. This means any request to the root URL (in this case, http://yourdomain.com/) will be handled by the URL patterns inside api/urls.py.
 
-Project structure:
+Project structure as of now:
 
 api
 - mysite
@@ -256,6 +278,19 @@ api
     - manage.py
 - requirements.txt
 - .venv
+
+
+## Pointing the request to a view
+
+```\
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path("blogposts/", views.BlogPostListCreate.as_view(), name="blogpost-view-create")
+]
+```
+
 
 
 
