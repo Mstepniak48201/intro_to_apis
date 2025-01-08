@@ -282,7 +282,9 @@ api
 
 ## Pointing the request to a view
 
-```\
+Working directory/file: api/urls.py
+
+```
 from django.urls import path
 from . import views
 
@@ -290,6 +292,91 @@ urlpatterns = [
     path("blogposts/", views.BlogPostListCreate.as_view(), name="blogpost-view-create")
 ]
 ```
+
+Here, Django defines patterns for the api app. A request to /blogposts/ is routed to the BlogListCreate view, which handles the dispaly of a list of blog posts, or creating a new one.
+
+
+
+## Database Migration
+
+Any time we make a new model, or changes to a model, we apply a Database Migration.
+
+- This uses the Django ORM to automatically create the correct SQL table, or otherwise execute actions in the database.
+
+- Apply a database migration from the terminal:
+
+Run:
+cd mysite (main project directory)
+python3 manage.py makemigrations
+python3 manage.py migrate
+python3 manage.py runserver
+
+- `makemigrations` will make the files that specify what migrations need to be applied. In this case, it will - Create model BlogPost
+- `migrate` will create the tables in the SQL database. We should see this in the mysite directory as db.sqlite3.
+- `runserver` will start running the API.
+
+After running runserver, it will show a URL: http://127.0.0.1:8000/
+- When we go to it in the browser, there is an error. This is because we need to go to http://127.0.0.1:8000/blogposts/
+- When we enter the correct URL, the Blog Post List Create page should display in the browser. We should be able to interact with it by adding test title and content. The info we enter should display as a JSON.
+- After verifying that the API is functioning, shut down the server.
+
+
+
+## More Complex Views
+
+Working directory/file: api/views.py
+
+- Create a route that allows us to delete individual blog posts.
+
+```
+class BlogPostRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
+    # Copy the queryset and serilizer.
+    queryset = BlogPost.objects.all()
+    serializer_class = BlogPostSerializer
+
+    # pk stands for "primary key," which is the id of the blogpost
+    # This allows us to access an individual post.
+    lookup_field = "pk"
+```
+
+
+Working directory/file: api/views.py
+
+- Now we make a url that maps to the view we created.
+
+Add a new path() to the urlpatterns [] list, separated by a comma.
+
+```
+urlpatterns = [
+    path("blogposts/", views.BlogPostListCreate.as_view(), name = "blogpost-view-create"),
+    path("blogposts/<int:pk>/", views.BlogPostRetrieveUpdateDestroy.as_view(), name = "update")
+]
+```
+
+Run python3 manage.py runserver to start the server back up.
+
+- Add /blogposts/1/ to the URL in the browser, and the options: Delete, Options, and Get should be available. We can test the Update by changing "title" to "revised title" and "test content" to "test content update." Pressing Put should update the JSON display of the blogpost.
+
+
+
+## Overriding views
+
+Generic views from django are useful, but suppose we want something more custom? We override them.
+
+Inside of the BlogPostListCreate class, define a new function:
+
+```
+class BlogPostListDelete(generics.ListCreateAPIView):
+    queryset = BlogPost.objects.all()
+    serializer_class = BlogPostSerializer
+
+    def delete(self, request, *args, **kwargs):
+        BlogPost.objects.all().delete()
+        return Response()
+```
+
+
+
 
 
 
