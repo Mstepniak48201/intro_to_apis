@@ -7,4 +7,7 @@ venv/
 .venv/
 __pycache__/
 
+# django
+db.sqlite
+*.sqlite3
 
