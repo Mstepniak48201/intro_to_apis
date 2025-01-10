@@ -355,25 +355,39 @@ urlpatterns = [
 
 Run python3 manage.py runserver to start the server back up.
 
-- Add /blogposts/1/ to the URL in the browser, and the options: Delete, Options, and Get should be available. We can test the Update by changing "title" to "revised title" and "test content" to "test content update." Pressing Put should update the JSON display of the blogpost.
+- Add /blogposts/1 (or /blogposts/1/) to the URL in the browser, and the options: Delete, Options, and Get should be available. We can test the Update by changing "title" to "revised title" and "test content" to "test content update." Pressing Put should update the JSON display of the blogpost.
 
 
 
 ## Overriding views
 
-Generic views from django are useful, but suppose we want something more custom? We override them.
+Generic views from django are useful, but suppose we want something more custom? We override them. The following allows us to delete all blog posts.
 
 Inside of the BlogPostListCreate class, define a new function:
 
 ```
+# Modify imports
+from rest_framework import genreics, status
+from rest_framework.response import Response
+
 class BlogPostListDelete(generics.ListCreateAPIView):
     queryset = BlogPost.objects.all()
     serializer_class = BlogPostSerializer
 
     def delete(self, request, *args, **kwargs):
         BlogPost.objects.all().delete()
-        return Response()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 ```
+
+
+
+## Custom Views
+
+
+## Deployment
+
+24:23
+
 
 
 
