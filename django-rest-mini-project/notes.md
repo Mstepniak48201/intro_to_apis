@@ -414,9 +414,9 @@ class BlogPostList(APIView):
 
 ```
 
-If we want to connect this, add:
+To connect, add:
 
-`views.BlogPostList.as_view()`
+`path("blogposts/", views.BlogPostList.as_view(), name="blogpost-list-view")`
 
 to urlpatterns.
 
