@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from rest_framework import generics, status
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from .models import BlogPost
 from .serializers import BlogPostSerializer 
 
@@ -27,11 +28,25 @@ class BlogPostRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     # pk is "primary key," which is the id of the blogpost.
     lookup_field = "pk"
 
-
-
-
     def delete(self, request, *args, **kwargs):
         BlogPost.objects.all().delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+# Inherit from APIView to create a custom view.
+class BlogPostList(APIView):
+    def get(self, request, format=None):
+        # Get title. If no title, title == "".
+        title = request.query_params.get("title", "")
+
+        if title:
+            # Filter queryset based on title.
+            blog_posts = BlogPost.objects.filter(title__icontains=title)
+        else:
+            # If no title, return all blogposts.
+            blog_posts = BlogPost.objects.all()
+
+        serializer = BlogPostSerializer(blog_posts, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 

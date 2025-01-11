@@ -1,4 +1,4 @@
-#Django REST API mini project
+Django REST API mini project
 
 
 
@@ -289,11 +289,11 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path("blogposts/", views.BlogPostListCreate.as_view(), name="blogpost-view-create")
+    path("blogposts/create/", views.BlogPostListCreate.as_view(), name="blogpost-view-create")
 ]
 ```
 
-Here, Django defines patterns for the api app. A request to /blogposts/ is routed to the BlogListCreate view, which handles the dispaly of a list of blog posts, or creating a new one.
+Here, Django defines patterns for the api app. A request to /blogposts/create/ is routed to the BlogListCreate view, which handles the dispaly of a list of blog posts, or creating a new one.
 
 
 
@@ -361,6 +361,8 @@ Run python3 manage.py runserver to start the server back up.
 
 ## Overriding views
 
+Working directory/file: api/views.py
+
 Generic views from django are useful, but suppose we want something more custom? We override them. The following allows us to delete all blog posts.
 
 Inside of the BlogPostListCreate class, define a new function:
@@ -379,15 +381,301 @@ class BlogPostListDelete(generics.ListCreateAPIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 ```
 
+When we run the server, there should be a red DELETE button available. When we press it, it should delete all of the blog posts we have created, and return "HTTP 204 NO CONTENT."
 
 
 ## Custom Views
 
+Working directory/file: api/views.py
+
+Suppose we don't want to use the generics, and we want to use our own routes. We import APIView from `rest_framework.views` and pass it as an arg to the class so that our class inherits from APIView.
+
+Then we can write different methods based on which method we want to use (i.e. get, post, delete, put, patch), 
+
+```
+# Modify imports
+from rest_framework.views import APIView
+
+# New class:
+class BlogPostList(APIView):
+  def get(self, request, format=None):
+    # Get title, if no title, title = "".
+    title = request.query_params.get("title", "")
+
+    if title:
+      # Filter the queryset based on title
+      blog_posts = BlogPost.objects.filter(title_icontains=title)
+    else:
+      # If no title, return all blog posts
+      blog_posts = BlogPost.objects.all()
+
+    serializer = BlogPostSerializer(blog_posts, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+```
+
+If we want to connect this, add:
+
+`views.BlogPostList.as_view()`
+
+to urlpatterns.
+
 
 ## Deployment
 
-24:23
 
+### Acorn
+
+Acorn is free and open source software that allows us to create an Acorn file, which specifies the entire app, and describes how it should be deployed. 
+
+We use the Acorn file to build an Acorn Image, which is similar to a Docker image.
+
+We can then publish that image and use it to deploy as many instances of our app as we want.
+
+This allows us to share the app with others by giving them the Acorn Image.
+
+
+### Steps
+
+1. Create Docker File.
+
+The Docker file specifies How We Run the application, while the Acorn File specifies the services and additional configuration needed when we deploy.
+
+working directory: api (main project directory)
+
+Run:
+mv requirements.txt mysite
+cd mysite
+
+requirements.txt should now be in api/mysite. We need it there for the next steps.
+
+Working directory: api/mysite
+
+- Create new file named Dockerfile
+  - Specifiy the syntax.
+  - Specify the image we build from.
+  - Expose port 8000, where our server will run.
+  - Specify working directory.
+  - Install dependencies.
+  - Copy requirements.txt
+  - Use pip command to install requirements.txt
+  - Copy contents off the working directory.
+  - Specify the entry point and the command we will use to run the server.
+
+```
+# syntax=docker/dockerfile:1.4
+
+FROM --platform=$BUILDPLATFORM python:3.10-alpine AS builder
+EXPOSE 8000
+WORKDIR /app
+# Install system dependencies
+RUN apk update
+RUN apk add \
+    pkgconfig \
+    gcc \
+    musl-dev \
+    bash \
+    mariadb-dev
+
+# Install any needed packages specified in requirements.txt
+COPY requirements.txt /app
+RUN pip install --no-chace-dir -r requirements.txt
+
+# Copy the current directory contents into the container at /usr/src/app
+COPY . /app
+# Run server
+ENTRYPOINT ["python3"]
+CMD ["manage.py", "runserver", "0.0.0.0:8000"]
+```
+
+
+2. Create the Acorn file
+
+The Dockerfile literally explains how the application is run.
+
+Now that we have instructions on how to run the app, we need instructions on how to deploy it. We need to:
+  - Set up the database
+  - Do database migrations
+  - etc.
+
+working directory: api/mysite
+
+Create a new file: db-script.sh
+
+This script will be used whenever the app runs, so that we migrate the database. Automatically apply changes to the database, and make sure the correct tables exist when we run a new deployment.
+
+```
+#! /bin/bash
+
+sleep 10
+python3 manage.py makemigrations
+python3 manage.py migrate
+```
+
+Run:
+cd api
+
+Working directory: api (main project directory)
+
+- Create a new file named Acornfile
+  - The Acornfile specifies everything we need to deploy the app.
+  - services, jobs, containers, images.
+  - We start with our args: djangodbname: "djangodb"
+    - We will use this name when we create the database with a service.
+
+  - services: We could use many databases, MongoDB, Postgres, etc.
+    - We will be using MariaDB
+    - We use an image to create a database.
+    - We pass the arg djangodbname, which we defined in args, to the service.
+
+  - The jobs will initialize the database with dbinit.
+    - dbinit will build from images.app.containerBuild, which we define at 
+    the bottom of the file.
+    - The environment is specified by environment variables that we are
+    declaring, and come from the service.
+    - Specify that the database is what is consumed.
+    - Specify the entry point "/bin/bash"
+    - Specify the command that makes the database script executable, then
+    executes the database script, applying the migrations to the new 
+    database.
+
+  - The job sets everything up.
+
+  - The container runs the app.
+    - build the image specified at the bottom of the file.
+    - Determine which port we publish on.
+    - depend on the job (dbinit).
+    - consume the database.
+
+    - Check if in dev mode.
+    
+    - Specify environment variables.
+
+  - images: specify the container
+
+```
+args: {
+	djangodbname: "djangodb"
+}
+
+services: db: {
+	image: "ghcr.io/acorn-io/mariadb:v10.11.5-1"
+	serviceArgs: {
+		dbName: args.djangodbname
+	}
+}
+
+jobs: {
+	dbinit: {
+		build: images.app.containerBuild
+		env: {
+			MARIADB_USER:          "@{service.db.secrets.admin.username}"
+			MARIADB_ROOT_PASSWORD: "@{service.db.secrets.admin.password}"
+			MARIADB_HOST:          "@{service.db.address}"
+			MARIADB_PORT:          "@{service.db.port.3306}"
+			MARIADB_DATABASE:      "@{service.db.data.dbName}"
+		}
+		consumes: ["db"]
+		entrypoint: "/bin/bash"
+		command:    "-c 'chmod +x ./db-script.sh && ./db-script.sh'"
+	}
+}
+
+containers: web: {
+	build: images.app.containerBuild
+	ports: publish: "8000:8000/http"
+	dependsOn: ["dbinit"]
+	consumes: ["db"]
+
+	if args.dev {dirs: "/app": "./mysite"}
+
+	env: {
+		MARIADB_USER:          "@{service.db.secrets.admin.username}"
+		MARIADB_ROOT_PASSWORD: "@{service.db.secrets.admin.password}"
+		MARIADB_HOST:          "@{service.db.address}"
+		MARIADB_PORT:          "@{service.db.port.3306}"
+		MARIADB_DATABASE:      "@{service.db.data.dbName}"
+	}
+}
+
+images: app: containerBuild: {
+	context:    "./mysite"
+	dockerfile: "./mysite/Dockerfile"
+}
+```
+
+3. Adjustments
+
+- Add mysqlclient package to requirements.
+
+Working directory/file: api/mysite/requirements.txt
+
+```
+django
+djangorestframework
+environs
+mysqlclient
+```
+
+- Adjust settings so app works in a deployed environment, not just on a local machine.
+
+Working directory/file: api/mysite/mysite/settings.py
+
+```
+# Change ALLOWED_HOSTS to *, for "any host," i.e. the Acorn Host.
+ALLOWED_HOSTS = ["*"]
+
+# Create trusted origins variable under ALLOWED_HOSTS.
+# Allow all Acorn origins, avoid CSRF issues.
+CSRF_TRUSTED_ORIGINS = ["http://*.on-acorn.io", "https://*.on-acorn.io"]
+```
+
+- import os into settings so we can access environment variables.
+
+- Change database configuration so the app uses the database that is created by the Acorn File for our deployment.
+
+Working directory/file: api/mysite/mysite/settings.py
+
+```
+# Import os.
+from pathlib import Path
+import os
+```
+
+```
+# Change database config.
+DATABASES = {
+  "default": {
+    "ENGINE": "django.db.backends.mysql",
+    "NAME": os.getenv("MARIADB_DATABASE"),
+    "USER": os.getenv("MARIADB_USER"),
+    "PASSWORD": os.getenv("MARIADB_ROOT_PASSWORD"),
+    "HOST": os.getenv("MARIADB_HOST"),
+    "PORT": os.getenv("MARIADB_PORT", 3306)
+  }
+}
+```
+
+The Acorn file will spin up a database, and we need to use the environment variables that allow us to connect to that database.
+
+
+### Run the Acorn File/Build the Acorn Image
+
+- Install the Acorn CLI
+  - mac)S brew install acorn-io/cli/acorn
+  - Linux: curl https://get.acorn.io | sh
+
+Working directory: api/mysite
+
+Run:
+curl https://get.acorn.io | sh
+
+The Acorn CLI should now be installed.
+
+Run:
+acorn login
+
+34:24
 
 
 
