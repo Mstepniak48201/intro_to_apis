@@ -11,8 +11,6 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
-import os
-
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -28,10 +26,12 @@ SECRET_KEY = 'django-insecure-&=j%_s@h42d_)-4!a)c&f(cj!5xb74pu*8gx4!3$t+yrrogsex
 DEBUG = True
 
 # Change ALLOWED_HOSTS = *, for "any host," i.e. the Acorn Host.
-ALLOWED_HOSTS = ["*"]
+# ALLOWED_HOSTS = ["*"]
+
+ALLOWED_HOSTS = []
 
 # Allow all Acorn origins, avoid CSRF issues.
-CSRF_TRUSTED_ORIGINS = ["http://*.on-acorn.io", "https://*.on-acorn.io"]
+# CSRF_TRUSTED_ORIGINS = ["http://*.on-acorn.io", "https://*.on-acorn.io"]
 
 # Application definition
 
@@ -82,12 +82,8 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 
 DATABASES = {
   "default": {
-    "ENGINE": "django.db.backends.mysql",
-    "NAME": os.getenv("MARIADB_DATABASE"),
-    "USER": os.getenv("MARIADB_USER"),
-    "PASSWORD": os.getenv("MARIADB_ROOT_PASSWORD"),
-    "HOST": os.getenv("MARIADB_HOST"),
-    "PORT": os.getenv("MARIADB_PORT", 3306)
+    "ENGINE": "django.db.backends.sqlite3",
+    "NAME": BASE_DIR / "db.sqlite3",
   }
 }
 
