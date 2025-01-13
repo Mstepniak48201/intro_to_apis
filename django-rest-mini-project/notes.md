@@ -422,6 +422,7 @@ to urlpatterns.
 
 ## Deployment
 
+* These steps are all depricated. Acorn has migrated to Obot.
 
 ### Acorn
 
@@ -658,23 +659,6 @@ DATABASES = {
 The Acorn file will spin up a database, and we need to use the environment variables that allow us to connect to that database.
 
 
-### Run the Acorn File/Build the Acorn Image
-
-- Install the Acorn CLI
-  - mac)S brew install acorn-io/cli/acorn
-  - Linux: curl https://get.acorn.io | sh
-
-Working directory: api/mysite
-
-Run:
-curl https://get.acorn.io | sh
-
-The Acorn CLI should now be installed.
-
-Run:
-acorn login
-
-34:24
 
 
 
