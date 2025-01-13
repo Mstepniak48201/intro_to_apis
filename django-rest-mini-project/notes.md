@@ -1,5 +1,4 @@
-Django REST API mini project
-
+# Django REST API mini project
 
 
 ## Setup
