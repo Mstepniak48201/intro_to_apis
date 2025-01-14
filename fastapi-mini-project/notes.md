@@ -38,6 +38,52 @@
   - pip3 install fastapi uvicorn pydantic
 
 
+## Discussion of FastAPI, Uvicorn, the API and the split functionality of the web server and the application server.
+
+* Uvicorn is an ASGI (Asynchronous Server Gateway Interface) server. Most of the descriptions of the server/client request/response process display something like this:
+
+A client at a restaurant requests a menu item from their server, who then communicates that request to the kitchen. When the item is ready, the server brings it to the client. The kitchen, in this analogy is the database.
+
+A common diagram:
+```
+           ->REQUEST->
+ _____       _____       _____
+|     | --> |     | --> |     |
+| App |     | API |     | DB  |
+|_____| <-- |_____| <-- |_____|
+            
+           <-RESPONSE<-
+```
+
+It's a little more complicated than that though. In this case, the API will be split into two parts: the web server (Uvicorn) and the application server (the API). Keeping with the restaurant metaphor, here is a more detailed breakdown:
+
+1. The Browser or App (Client):
+  - A Customer who comes to a restaurant
+
+2. Uvicorn (Web Server)
+  - Wait staff:
+    - Takes customer Order (Request)
+    - Passes Order to the kitchen
+  
+  - Uvicorn (Web Server) handles communication between the Client and the API Server.
+  - The Web Server ensures that the Request reaches the correct place and delivers the Response back.
+
+3. The API Server:
+  - Kitchen:
+    - Checks the Pantry (Database) for Ingredients (Data Queries)
+    - Cooks the Ingredients (Logic and Processing)
+    - Plates the Dish (Response)
+  
+    - The API Server is where the Request is Processed.
+      - Database interaction
+      - Preparing the Response
+
+4. Uvicorn (Web Server)
+  - Wait staff:
+    -Delivers the Dish (Response) to the Customer (Client)
+
+  - The Web Server delivers the Response back to the Client.
+
 ## Running FastAPI
 
 ```
