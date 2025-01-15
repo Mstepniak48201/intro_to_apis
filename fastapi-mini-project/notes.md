@@ -1,5 +1,6 @@
 # Introduction
 
+
 ## What is an API?
 
 - Application Programming Interface
@@ -40,7 +41,7 @@
 
 ## Discussion of FastAPI, Uvicorn, the API and the split functionality of the web server and the application server.
 
-* Uvicorn is an ASGI (Asynchronous Server Gateway Interface) server. Most of the descriptions of the server/client request/response process display something like this:
+Most of the descriptions of the server/client request/response process display something like this:
 
 A client at a restaurant requests a menu item from their server, who then communicates that request to the kitchen. When the item is ready, the server brings it to the client. The kitchen, in this analogy is the database.
 
@@ -57,16 +58,25 @@ A common diagram:
 
 It's a little more complicated than that though. In this case, the API will be split into two parts: the web server (Uvicorn) and the application server (the API). Keeping with the restaurant metaphor, here is a more detailed breakdown:
 
+
 1. The Browser or App (Client):
   - A Customer who comes to a restaurant
+
 
 2. Uvicorn (Web Server)
   - Wait staff:
     - Takes customer Order (Request)
     - Passes Order to the kitchen
+
+
+  - Uvicorn (Web Server) is an ASGI (Asynchronous Server Gateway Interface) server.
+    - Uvicorn ensures that the Request reaches the correct place and delivers the Response back.
+    - The Web Server handles communication between the Client and the API Server.
+
+    To reiterate:
+      - The Web Server is responsible for handling HTTP requests and passing them to the FastAPI app. 
+      - also sends responses returned by FastAPI back to the client.
   
-  - Uvicorn (Web Server) handles communication between the Client and the API Server.
-  - The Web Server ensures that the Request reaches the correct place and delivers the Response back.
 
 3. The API Server:
   - Kitchen:
@@ -78,13 +88,21 @@ It's a little more complicated than that though. In this case, the API will be s
       - Database interaction
       - Preparing the Response
 
+    - In this project, FastAPI is the tool that helps create the kitchen.
+      - The code in the API file are instructions
+      - FastAPI framework is the equipment that makes executing those instructions possible.
+
+
 4. Uvicorn (Web Server)
   - Wait staff:
     -Delivers the Dish (Response) to the Customer (Client)
 
   - The Web Server delivers the Response back to the Client.
 
-## Running FastAPI
+
+## FastAPI hello, world!
+
+Here is the starter code, the hello, world!
 
 ```
 main.py
@@ -96,8 +114,9 @@ app = FastAPI()
 
 # Set up basic root.
 # We can send a get request to this URL.
-@app.get("/")
 
+# Use the @app.get decorator
+@app.get("/")
 # Upon the get request, this function will execute.
 # FastAPI will automatically convert the Dict into JSON.
 def read():
@@ -107,8 +126,7 @@ if __name__ == "__main__":
   # Import uvicorn, a simple web server.
   import uvicorn
 
-  # 0.0.0.0 means we are running on our local IP address.
-  # local host 8000
+  # 0.0.0.0 means the server is accessible on all network interfaces of the host machine. 
   uvicorn.run(app, host="0.0.0.0", port=8000)
 ```
 
@@ -126,7 +144,86 @@ In the browser, enter the address: http:#localhost:8000
 
 The browser sends a request to the API, and hello: "world" should display on the screen.
 
-- Now, got to localhost:8000/docs Or localhost:8000/redoc
+
+* Working Through the Start Code: What it does.
+
+1. Get an instance of the API Server. In the restaurant metaphor, this is us creating a "kitchen."
+```
+from fastapi import FastAPI
+app = FastAPI()
+```
+
+2. Create the route declaration/endpoint definition. In a restaurant, this would be "defining a menu item."
+  - @app.get() is a decorator method that inherits from the app variable, our instance of FastAPI.
+  
+  - @app.get("/") specifies the following:
+    - The type of client request: The HTTP method GET
+    - The URL where this endoint can be accessed: The path /
+    - @app.get("/") is adding a menu item, and defining where it can be accessed.
+
+  - @app.get() triggers the function it is attached to when the path, in this case "/"
+    is matched to the request from the client.
+    - So when "/" is added to http://localhost:8000 like so http://localhost:8000/ the
+    read() function is triggered.
+
+  - def read() is the route handler/view function. It contains:
+    - The logic or processing to be performed
+    - The response to be returned.
+
+  - In terms of the restaurant, @app.get("/") adds a menu item, defines where it can be accessed.
+ 
+  - When a customer orders the dish associated with the / route by sending a GET request to /:
+    - def read() is the recipe for the dish.
+    - The kitchen prepares the response, the Python dict {"hello": "world"}
+
+  - FastAPI automatically formats the response as JSON (plates the dish) and sends the dish to the waitstaff.
+
+```
+@app.get("/")
+def read():
+  return {"hello": "world"}
+```
+
+3. Start the webserver (Uvicorn). This would be "Opening the restuarant."
+
+  - When we run python3 main.py:
+  
+    - Unicorn (web server) starts up, and is listening to take requests requests,
+    as waitstaff would take orders, at the location http://0.0.0.0:8000 (localhost:8000)
+
+    - Uvicorn's job is to ensure that requests are routed to to the API server.
+```
+if __name__ == "__main__":
+  import uvicorn
+  uvicorn.run(app, host="0.0.0.0", port=8000)
+```
+
+4. GET request from client -the customer puts in an order with waitstaff.
+  
+  - The browser (or app) makes a GET request to http://localhost:8000/
+  - "/" is the endpoint specified in @app.get("/"), the FastAPI decorator that triggers read()
+
+  - Uvicorn passes request to FastAPI - waitstaff passes order to kitchen.
+    - When main.py runs, uvicorn.run() is called. It takes app, an instance of FastAPI as an arg.
+    - uvicorn.run() starts up localhost:8000, and listens for requests.
+    - It receives a request to "/" and passes it to FastAPI
+
+  - @app.get("/") determins the request to "/" should be a GET request - the kitchen receives
+    an order.
+    - FastAPI inspects the incoming request and checks for:
+      - a route matching "/"
+      - An HTTP method matching the one defined by @app.get("/"), in this case, GET.
+
+  - @app.get("/") triggers read() - the kitchen cooks the dish.
+    - read() returns the python dict {"hello": "world"}
+
+  - FastAPI automatically reformats the python dict as JSON - the kitchen plates the dish.
+
+  - Uvicorn is listening for the FastAPI return. When it comes, Uvicorn returns the response to
+    the client (in this case, the browser) - the waitstaff brings the dish to the customer.
+
+
+* ! Go to localhost:8000/docs Or localhost:8000/redoc
   - Documentation for the API will be automatically generated.
   - docs and redoc are two different versions.
 
