@@ -13,7 +13,7 @@ There will be sections for all three projects, each of which will include:
 ## FastAPI Mini-project
 
 ### Links to Tech with Tim video and GitHub
-`Youtube: https://www.youtube.com/watch?v=lWsGhG6N_1E`
+`YouTube: https://www.youtube.com/watch?v=lWsGhG6N_1E`
 `GitHub: https://github.com/techwithtim/Fast-API-CRUD-App/tree/main`
 
 
@@ -44,6 +44,18 @@ From the printout, copy the address http://0.0.0.0:8000 and go to http://0.0.0.0
 This will open the automatically-generated API documentation provided by FastAPI. For each method created, there is the option to "try it out," Create a few tasks. Using "Read Task" will display all tasks that have been created. 
 
 Because the API is not connected to a database, the data created will not persist.
+
+
+
+## FastAPI React Mini-project
+
+### Links to Tech with Tim video and GitHub
+`YouTube: https://www.youtube.com/watch?v=aSdVU9-SxH4`
+`GitHub: https://github.com/techwithtim/FastAPI-React-Integration/blob/main/notes.md`
+
+
+### Description
+
 
 
 

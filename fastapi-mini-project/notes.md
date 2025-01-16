@@ -234,9 +234,13 @@ We want the API to be able to:
 - Create tasks
 - Delete tasks 
 - Update tasks
-
 - Create an empty list for tasks.
 
+Pydantic is a Python library that provides Pydantic Models, which are tools for data validation and parsing. 
+
+A Pydantic Model allows us to define structured data models with Python classes, enforce types, and validate and transform data.
+
+FastAPI uses Pydantic Models to make sure that data to and from the API adheres to a specific schema.
 
 ```
 main.py
