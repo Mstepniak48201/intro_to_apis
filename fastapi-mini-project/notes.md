@@ -102,7 +102,7 @@ It's a little more complicated than that though. In this case, the API will be s
 
 ## FastAPI hello, world!
 
-Here is the starter code, the hello, world!
+The code for a "hello, world!" API:
 
 ```
 main.py
@@ -145,7 +145,7 @@ In the browser, enter the address: http:#localhost:8000
 The browser sends a request to the API, and hello: "world" should display on the screen.
 
 
-* Working Through the Start Code: What it does.
+* Working Through hello, world! main.py: What it does.
 
 1. Get an instance of the API Server. In the restaurant metaphor, this is us creating a "kitchen."
 ```
@@ -208,7 +208,7 @@ if __name__ == "__main__":
     - uvicorn.run() starts up localhost:8000, and listens for requests.
     - It receives a request to "/" and passes it to FastAPI
 
-  - @app.get("/") determins the request to "/" should be a GET request - the kitchen receives
+  - @app.get("/") determines the request to "/" should be a GET request - the kitchen receives
     an order.
     - FastAPI inspects the incoming request and checks for:
       - a route matching "/"
