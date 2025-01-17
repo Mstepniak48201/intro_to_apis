@@ -11,3 +11,6 @@ __pycache__/
 db.sqlite
 *.sqlite3
 
+# React
+node_modules/
+

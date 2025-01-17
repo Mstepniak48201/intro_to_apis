@@ -182,7 +182,7 @@ Run:
 # Check node version
 node -v
 
-# Install most reacent long term support version
+# Install most recent long term support version
 nvm install --lts
 ```
 
@@ -270,7 +270,7 @@ Make a new file named Fruits.jsx
   - addFruit is called, and addFruit sends POST request to the server with the new fruit's name.
   - After the server updates, fetchFruits is called, fetching the updated list to keep the UI in sync.
 
-3. Axios POST request explaination:
+3. Axios POST request explanation:
   - When addFruit is called, fruitName is passed as a prop. 
   - The actual POST request is made by a method from the axios library.
   - We have our instance of axios, named "api" imported at the top.
@@ -341,17 +341,3 @@ const FruitList = () => {
 
 export default FruitList;
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -56,6 +56,46 @@ Because the API is not connected to a database, the data created will not persis
 
 ### Description
 
+notes.md begins by setting up the project structure and the dev environment. This project has a frontend and a backend, so those directories get set up.
+
+The tutorial also covers setting up a Python Virtual Environment (venv), as well as writing the requirements file and installing the backend and frontend dependencies. 
+
+There is a brief discussion on CORS, what it is, and why we are using FastAPI CORS Middleware, 
+
+As I follow the tutorial, I give comments and explanations in both main.py and api.js, followed by a brief walk through of the flow when a user makes a POST request in the React frontend.
+
+
+## How to Use
+
+Before cloning the repo, instal the lates Long-Term Support version of Node.js:
+```
+nvm install --lts
+```
+
+* Create the Python Virtual Environment
+```
+cd fastapi-react-mini-project/project/backend
+python -m venv venv
+```
+
+* Activate/Deactivate venv
+```
+source ./venv/bin/activate
+deactivate
+```
+
+* Install dependencies
+- With the venv activated:
+```
+pip install -r ./requirements.txt
+```
+
+* Install React dependencies/Run Server
+```
+cd fastapi-react-mini-project/project/frontend
+npm install
+npm run dev
+```
 
 
 
