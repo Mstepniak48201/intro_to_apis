@@ -25,7 +25,7 @@ FastAPI Backend handles:
 - cd into backend.
 
 ### Virtual Environment
-A virtual environment is an isolated environment for Python projects. it ensures that the Pyton libraries and tools installed for a single project won't conflict with those of other project's or a user's global Python environment.
+A virtual environment is an isolated environment for Python projects. it ensures that the Python libraries and tools installed for a single project won't conflict with those of other project's or a user's global Python environment.
 
 - For example: suppose there are two projects, and each uses a different version of FastAPI. The virtual environment allows each project to have its specific version of FastAPI without conflict. The virtual environment isolates the dependencies of each project.
 
@@ -156,6 +156,12 @@ if __name__=="__main__":
 
 ## Create the Frontend
 
+* Axios is a client-side JavasScript library that makes HTTP requests from a React project to the backend. Here, it will communicate with FastAPI endpoints, allowing the app to send and receive data.
+
+- Here, React will use Axios to send data to the FastAPI endpoint via HTTP requests.
+
+### Setup
+
 Go to the project root.
 
 Run:
@@ -176,7 +182,7 @@ Run:
 # Check node version
 node -v
 
-# Install most reacent long term support version
+# Install most recent long term support version
 nvm install --lts
 ```
 
@@ -190,7 +196,7 @@ api.js
 // Axios definition for calling the api
 import axios from 'axios';
 
-// Create an oinstance of axios with the base URL
+// Create an instance of axios with the base URL
 // If we ever want to point the frontend to a different backend, we only need to change the URL here.
 const api: AxiosInstance = axios.create({
   baseURL: "http://localhost:8000"
@@ -264,7 +270,7 @@ Make a new file named Fruits.jsx
   - addFruit is called, and addFruit sends POST request to the server with the new fruit's name.
   - After the server updates, fetchFruits is called, fetching the updated list to keep the UI in sync.
 
-3. Axios POST request explaination:
+3. Axios POST request explanation:
   - When addFruit is called, fruitName is passed as a prop. 
   - The actual POST request is made by a method from the axios library.
   - We have our instance of axios, named "api" imported at the top.
@@ -335,17 +341,3 @@ const FruitList = () => {
 
 export default FruitList;
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
