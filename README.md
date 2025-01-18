@@ -13,8 +13,8 @@ There will be sections for all three projects, each of which will include:
 ## FastAPI Mini-project
 
 ### Links to Tech with Tim video and GitHub
-YouTube: https://www.youtube.com/watch?v=lWsGhG6N_1E
-GitHub: https://github.com/techwithtim/Fast-API-CRUD-App/tree/main
+YouTube: https://www.youtube.com/watch?v=lWsGhG6N_1E<br>
+GitHub: https://github.com/techwithtim/Fast-API-CRUD-App/tree/main<br>
 
 
 ### Description
@@ -49,8 +49,8 @@ Because the API is not connected to a database, the data created will not persis
 ## FastAPI React Mini-project
 
 ### Links to Tech with Tim video and GitHub
-YouTube: https://www.youtube.com/watch?v=aSdVU9-SxH4
-GitHub: https://github.com/techwithtim/FastAPI-React-Integration/blob/main/notes.md
+YouTube: https://www.youtube.com/watch?v=aSdVU9-SxH4<br>
+GitHub: https://github.com/techwithtim/FastAPI-React-Integration/blob/main/notes.md<br>
 
 
 ### Description
@@ -100,8 +100,8 @@ npm run dev
 ## Django REST API Mini-project
 
 ### Links to Tech with Tim video and GitHub
-https://www.youtube.com/watch?v=t-uAgI-AUxc
-https://github.com/techwithtim/django-rest-api
+https://www.youtube.com/watch?v=t-uAgI-AUxc<br>
+https://github.com/techwithtim/django-rest-api<br>
 
 
 ### Description
