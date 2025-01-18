@@ -76,7 +76,7 @@ Before beginning, here is a step-by-step, high-level description of the flow of 
 
 3. The view handles the request logic. If the request requires database interaction, the view calls the ORM.
 
-4. The ORM (defined in models.py) translates the Python-based model queries into SQL commands to interact with the database. When the database responds, the ORM converts the results into Python objects (model instances).o
+4. The ORM (Object-Relational Mapper), defined in models.py, translates the Python-based model queries into SQL commands to interact with the database. When the database responds, the ORM converts the results into Python objects (model instances).o
 
 5. Data returned by the ORM is passed to the serializer, which converts the Python objects (model instances) into a client friendly format, in this case JSON.
 

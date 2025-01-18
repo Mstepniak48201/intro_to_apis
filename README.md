@@ -46,7 +46,6 @@ This will open the automatically-generated API documentation provided by FastAPI
 Because the API is not connected to a database, the data created will not persist.
 
 
-
 ## FastAPI React Mini-project
 
 ### Links to Tech with Tim video and GitHub
@@ -65,7 +64,7 @@ There is a brief discussion on CORS, what it is, and why we are using FastAPI CO
 As I follow the tutorial, I give comments and explanations in both main.py and api.js, followed by a brief walk through of the flow when a user makes a POST request in the React frontend.
 
 
-## How to Use
+### How to Use
 
 Before cloning the repo, instal the lates Long-Term Support version of Node.js:
 ```
@@ -75,7 +74,7 @@ nvm install --lts
 * Create the Python Virtual Environment
 ```
 cd fastapi-react-mini-project/project/backend
-python -m venv venv
+python3 -m venv venv
 ```
 
 * Activate/Deactivate venv
@@ -96,6 +95,77 @@ cd fastapi-react-mini-project/project/frontend
 npm install
 npm run dev
 ```
+
+
+## Django REST API Mini-project
+
+### Links to Tech with Tim video and GitHub
+https://www.youtube.com/watch?v=t-uAgI-AUxc
+https://github.com/techwithtim/django-rest-api
+
+
+### Description
+
+notes.md describes the setup of the project and the dev environment. 
+
+The two preceding projects had a single file, main.py, as the brains of the API. Here, things are different, beginning with how a request is routed. While the tutorial shows *how* to use Django, it doesn't always take the time to explain *what* is going on. Feeling a bit lost, I did some research and worked through the Django Request-Response Workflow.
+
+Following the tutorial, we then:
+- Build an ORM (Object Relational Mapping) model for data to interact with
+- Define the Serializer, which takes the model and converts it into JSON-compatible data the API can interact with
+- Create Views - the function/class that takes a request and returns a response
+
+The tutorial then briefly discusses the two-step routing system, but again the focus was on "here's what you need to do to get the API up and running," and I felt it was worthwhile to understand a bit bet
+
+The tutorial, with a focus on what is needed to get the API up and running, touches on the two step routing system, but I felt it would be worthwhile to understand a bit more, so I have included a discussion on:
+- urlpatterns[]
+- path()
+- include() as used in path()
+
+Following the tutorial, and supplemented by my own notes, the project is finished with:
+- More complex views
+- Overriding views
+- Custom views
+
+* Deployment Section
+
+I have left my notes on deployment intact, but chose to not go through the process, because the software used in the tutorial, Acorn, is now migrated and rebranded to Obot. I have never done a deployment before, and I decided that trying to do so while refactoring my code within a framework that I have only begun to understand is not the best learning environment. That said, I think that the process of writing the code out in notes.md and describing the process will aid me in future projects.
+
+
+### How to use
+
+* Create the Python Virtual Environment
+```
+cd django-rest-mini-project/project/api
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+* Install dependencies: Run:
+pip3 install -r requirements.txt
+
+
+- Manage migrations and start server:
+```
+cd mysite (main project directory)
+python3 manage.py makemigrations
+python3 manage.py migrate
+python3 manage.py runserver
+```
+
+- Navigate:
+Copy the address from the printout: http://127.0.0.1:8000/ and paste it into the browser.
+
+To navigate to the various views, go to:
+
+```
+http://127.0.0.1:8000/blogposts/create/
+http://127.0.0.1:8000/blogposts/blogposts/
+http://127.0.0.1:8000/blogposts/<int>/ (add ID number of a desired blogpost, view expects an integer)
+```
+
+These views can be used to GET, POST and DELETE blogposts.
+
 
 
 
