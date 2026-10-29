@@ -134,7 +134,7 @@ app.add_middleware(
 memory_db = {"fruits": []}
 
 # @app.get defines the HTTP Get route
-# /fruits is the path the API request will hit, and we are defining that URL endpoing here, inside the decorator parameters.
+# /fruits is the path the API request will hit, and we are defining that URL endpoint here, inside the decorator parameters.
 # response_model specifies the expected structure of the response the route will return.
 # When FastAPI receives a request for /fruits, it will ensure that the return value from the function is formatted according to the fruits model.
 # So: When the API request hits the /fruits endpoint with a get request, the decorator will determine that the response model should be Fruits.
